@@ -1,0 +1,23 @@
+<ul class="nav nav-pills nav-fill bg-dark mt-3">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{{path('club_show',{'slug': slug,etudiantclub: club })}}">Acceuil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{path('discussion_index',{'slug': slug})}}">Forum de discussions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{path('club_students',{'slug': slug})}}">Membres du club</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{path('activity_index',{'slug': slug})}}">Nos activités</a>
+                </li>
+                {% if is_granted('ROLE_PRESIDENT_CLUB') or is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{path('adhesion_all',{'slug': slug})}}">Demande d'adhession</a>
+                    </li>
+                {% endif %}
+                
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+</ul>

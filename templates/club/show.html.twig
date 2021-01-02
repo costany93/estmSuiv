@@ -1,0 +1,103 @@
+{% extends "base.html.twig" %}
+
+{% block Title %}Club {{club.nom}} - ESTM{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include "shared/_headerClubText.html.twig" %}
+        {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_ADMIN')  %}
+            {#Le block des statistique#}
+            <div class="row justify-content-center">
+                <div class="col-md-3 m-2 club-stat-block greenStat">
+                        <h4 class="text-center">Nombres d'activités</h4>
+                        <h1 class="text-center">{{club.activities|length()}}</h1>
+                </div>
+                <div class="col-md-3 m-2 club-stat-block greenStat">
+                    <h4 class="text-center">Informations</h4>
+                    <h1 class="text-center">{{club.informations|length}}</h1>
+                </div>
+                <div class="col-md-3 m-2 club-stat-block greenStat">
+                    <h4 class="text-center">Mes participations</h4>
+                    <h1 class="text-center">
+                    {% if is_granted('ROLE_ETUDIANT') %}
+                        {% set counter = 0 %}
+
+                        {% for participation in app.user.etudiant.participations %}
+                            {% if participation.state == true %}
+                                {% set counter = counter +1 %}
+                            {% endif %}
+                            
+                        {% endfor %}
+
+                        {{counter}}
+                    {% else %}
+                        Admin
+                    {% endif %}
+                    
+                    </h1>
+                </div>
+            </div>
+            {#Fin du block des statistiques#}
+
+            {#Block barre de naivagation du club#}
+            {% include "shared/_navpilclub.html.twig" with {'slug': club.slug,'club': club.nom } %}
+
+
+            {#Le block du contenu gérales de ma page les informations et activités#}
+
+            <div class="row mt-5">
+                <div class="col-md-3  estmBlue text-white">
+                    <h4 class"mt-4">Informations générales</h4>
+                    {% if club.president is not null %}
+                        {% set president = club.president.etudiant.personne %}
+                        <h5>Président du club</h5>
+                        <h6>{{president.fistname}}</h6>
+                        <h5>Téléphone</h5>
+                        <h6>{{president.phone}}</h6>
+                        <h5>Email</h5>
+                        <h6>{{club.president.etudiant.personne.email}}</h6>    
+                    {% else %}
+                        <h5 class="text-danger">Président du club</h5>
+                        <h6>Ce club n'as pas encore de president, Veuillez le signaler aux administrateurs</h6>
+                    {% endif %}
+                    <h5>Présentation du club</h5>
+                    <h6>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae in placeat necessitatibus exercitationem iusto voluptatem eius aliquam consequatur, modi commodi nobis aliquid expedita quidem itaque quis fugit vel eum recusandae!</h6>
+                    <h5>But du club</h5>
+                    <h6>{{club.description}}</h6>
+                </div>
+                <div class="col-md-8">
+                    <div class="text-center">
+                        <h3>Nos dernières informations</h3>
+                        {% if is_granted('ROLE_PRESIDENT_CLUB') or  is_granted('ROLE_ADMIN') %}
+                            <div class="row justify-content-center">
+                                <a href="{{path('information_add',{slug: club.slug})}}" class="btn btn-primary">Nouvelle information</a>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            {% for information in informations %}
+                                {% include "shared/_cardClub.html.twig" with {'content': information.content, 'image': information.coverImage} %}                         
+                            {% endfor %}
+                        </div>
+
+                        <div class="text-center">
+                        <h3>Nos dernières activitées</h3>
+                        {% if is_granted('ROLE_PRESIDENT_CLUB') or  is_granted('ROLE_ADMIN')  %}
+                            <div class="row justify-content-center">
+                                <a href="{{path('activity_create',{slug: club.slug})}}" class="btn btn-primary">Nouvelle activité</a>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            {% for activity in activities %}
+                                {% include "shared/_cardActivityIndex.html.twig" %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <h3>Tu n'es pas un étudiant et non plus administrateur</h3>
+        {% endif %}
+    </div>
+{% endblock %}

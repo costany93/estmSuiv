@@ -1,0 +1,26 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="container">
+        {% if hasError %}
+            <div class="alert alert-danger">
+                une erreur s'est produite, nom d'utilisateur ou mot de passe incorrect
+            </div>
+        {% endif %}
+        <form action="{{path('account_login')}}" method="post">
+            <div class="form-group">
+                <label for="_username">Email</label>
+                <input type="text" name="_username" id="_username" placeholder="Entrer votre email" class="form-control"> 
+            </div>
+            <div class="form-group">
+                <label for="_username">Email</label>
+                <input type="password" name="_password" id="_password" placeholder="Entrer votre mot de passe" class="form-control"> 
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    S'authentifier
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

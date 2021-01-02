@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réponse - ESTM{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include "shared/_headerClubText.html.twig" %}
+        {% include "shared/_clubpageheader.html.twig" with {'title': 'Répondez a sa question ici!'} %}
+        {% include "shared/_navpilClub.html.twig" with {slug: club.slug} %}
+        <div class="row mt-3">
+            <div class="col-md-4 estmBlue text-white">
+                {{form_start(form)}}
+                    {{form_widget(form)}}
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i>
+                        répondre 
+                    </button>
+                {{form_end(form)}}
+                <h6 class="mt-2">Préoccupation posté par {{discussion.etudiant.personne.fistname}}</h6>
+                <h5>{{discussion.title}}</h5>
+                <h6 class="mt-2">Contenu détaillé</h6>
+                <h5>{{discussion.content}}</h5>
+            </div>
+            <div class="col-md-8">
+                <h4 class="text-center">Ce que les autres pensent de la question</h4>
+                {% for answer in answers %}
+                {% set personne = answer.etudiant.personne %}
+                    <div class="bg-light p-1 border mt-2">
+                            <h4>{{personne.fistname}} {{personne.lastname}}</h4>
+                            <p>{{answer.content}}</p>
+                            {# composer require twig/intl-extra pour activer le format_datetime#}
+                            <p><i class="fas fa-calendar-alt mr-2"></i>{{answer.createdAt | format_datetime(locale="fr")}}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

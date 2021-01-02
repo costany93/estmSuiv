@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Activités - ESTM{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include "shared/_headerClubText.html.twig" %}
+        {% include "shared/_clubpageheader.html.twig" with {'title': 'Nos activités'} %}
+        {% include "shared/_navpilclub.html.twig" with {'slug': club.slug} %}
+
+        {% if is_granted('ROLE_PRESIDENT_CLUB') or is_granted('ROLE_ADMIN') %}
+            <a href="{{path('activity_create',{slug: club.slug})}}" class="btn btn-primary my-2">Nouvelle activité</a>
+        {% endif %}
+        
+        <div class="row">
+            {% for activity in activities %}
+                {% include "shared/_cardActivity.html.twig" %}
+            {% endfor %}
+            </div>
+    </div>
+{% endblock %}
